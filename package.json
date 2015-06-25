@@ -1,0 +1,32 @@
+{
+  "name": "koao",
+  "version": "0.0.1",
+  "description": "koao - a tiny helper for koa, make rest more easier",
+  "main": "lib/index.js",
+  "scripts": {
+    "test": "mocha -R spec test/*.js",
+    "test-cov": "istanbul cover node_modules/.bin/_mocha -- -R dot test/*.js",
+    "test-travis": "istanbul cover node_modules/.bin/_mocha --report lcovonly -- -R dot test/*.js"
+  },
+  "repository": "coderhaoxin/koao",
+  "author": "haoxin",
+  "license": "MIT",
+  "keywords": [
+    "restful",
+    "helper",
+    "rest",
+    "koa"
+  ],
+  "devDependencies": {
+    "istanbul-harmony": "0",
+    "koa": "0",
+    "mocha": "2",
+    "supertest": "1"
+  },
+  "dependencies": {
+    "co-body": "3",
+    "debug": "2",
+    "fs-readdir-recursive": "0",
+    "koa-router": "5"
+  }
+}
