@@ -1,7 +1,6 @@
 'use strict'
 
 const koao = require('../../../')
-const assert = require('assert')
 
 class Item extends koao.BaseHandler {
   constructor() {
@@ -10,9 +9,8 @@ class Item extends koao.BaseHandler {
     })
   }
 
-  * query(ctx, qs, params) {
-    assert.deepEqual(qs, { name: 'hello' })
-    assert.deepEqual(params, {})
+  * query(ctx, entities) {
+    ctx.assert(entities === undefined, 500)
 
     ctx.body = {
       items: [{
@@ -23,9 +21,8 @@ class Item extends koao.BaseHandler {
     }
   }
 
-  * findOne(ctx, qs, params) {
-    assert.deepEqual(qs, { name: 'hello' })
-    assert.deepEqual(params, { id: '1' })
+  * findOne(ctx, entity) {
+    ctx.assert(entity === undefined, 500)
 
     ctx.body = {
       name: 'hello'
@@ -36,27 +33,23 @@ class Item extends koao.BaseHandler {
     ctx.assert(body.name, 400, 'name required')
   }
 
-  * create(ctx, body, params) {
-    assert.deepEqual(body, { name: 'haoxin' })
-    assert.deepEqual(params, {})
+  * create(ctx, body) {
+    ctx.assert(body.name === 'haoxin', 400, 'invalid name')
 
     ctx.body = {
       message: 'success'
     }
   }
 
-  * update(ctx, body, params) {
-    assert.deepEqual(body, { name: 'haoxin' })
-    assert.deepEqual(params, { id: '1' })
+  * update(ctx, body) {
+    ctx.assert(body.name === 'haoxin', 400, 'invalid name')
 
     ctx.body = {
       message: 'success'
     }
   }
 
-  * remove(ctx, params) {
-    assert.deepEqual(params, { id: '1' })
-
+  * remove(ctx) {
     ctx.body = {
       message: 'success'
     }

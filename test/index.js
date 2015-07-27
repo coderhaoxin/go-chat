@@ -29,9 +29,6 @@ describe('## basic', function() {
     it('findOne', function(done) {
       request(app.listen())
         .get(prefix + '/items/1')
-        .query({
-          name: 'hello'
-        })
         .end(function(err, res) {
           assert.ifError(err)
           assert.equal(res.status, 200)
@@ -100,8 +97,7 @@ function genApp(prefix) {
 
   koao.init(app, {
     prefix: prefix,
-    handlerDir: join(__dirname, 'fixture/handler'),
-    entityDir: join(__dirname, 'fixture/entity')
+    handlerDir: join(__dirname, 'fixture/handler')
   })
 
   return app

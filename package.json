@@ -1,6 +1,6 @@
 {
   "name": "koao",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "koao - a tiny helper for koa, make rest more easier",
   "main": "lib/index.js",
   "scripts": {
@@ -17,9 +17,13 @@
     "rest",
     "koa"
   ],
+  "files": [
+    "lib/"
+  ],
   "devDependencies": {
     "istanbul-harmony": "0",
     "koa": "0",
+    "koao-mongo": "*",
     "mocha": "2",
     "supertest": "1"
   },

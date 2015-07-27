@@ -9,28 +9,24 @@ class Item extends koao.BaseHandler {
     })
   }
 
-  * query(ctx, qs) {
-    console.log(qs)
+  * query(ctx, entities) {
+    console.log(entities)
 
     ctx.body = {
-      items: [{
-        name: 'one'
-      }, {
-        name: 'two'
-      }]
+      items: entities
     }
   }
 
-  * findOne(ctx, qs, params) {
-    console.log(params)
+  * findOne(ctx, entity) {
+    console.log(entity)
 
-    ctx.body = {
-      name: 'hello'
-    }
+    ctx.body = entity
   }
 
   * validate(ctx, body) {
     console.log(body)
+
+    // pass
   }
 
   * create(ctx, body) {
@@ -41,8 +37,7 @@ class Item extends koao.BaseHandler {
     }
   }
 
-  * update(ctx, body, params) {
-    console.log(params)
+  * update(ctx, body) {
     console.log(body)
 
     ctx.body = {
@@ -50,12 +45,8 @@ class Item extends koao.BaseHandler {
     }
   }
 
-  * remove(ctx, params) {
-    console.log(params)
-
-    ctx.body = {
-      message: 'success'
-    }
+  * remove() {
+    // pass
   }
 }
 
