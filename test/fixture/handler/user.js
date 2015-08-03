@@ -2,41 +2,39 @@
 
 const koao = require('../../../')
 
-class Item extends koao.BaseHandler {
+class Item extends koao.UserHandler {
   constructor() {
     super({
-      entity: 'user',
-      pathname: 'users'
+      uids: ['username']
     })
   }
 
-  * query(ctx, entities) {
+  * signup(ctx, data, exist) {
+    ctx.assert(!exist, 400, 'username exist')
+  }
+
+  * signin(ctx, data, passed) {
+    ctx.assert(passed, 400, 'invalid username or password')
+
     ctx.body = {
-      users: entities
+      message: 'success'
     }
   }
 
-  * findOne(ctx, entity) {
-    ctx.body = entity
+  * update(ctx, data) {
+  }
 
-    if (!entity) {
-      ctx.throw(404)
+  * logout(ctx) {
+    ctx.body = {
+      message: 'success'
     }
   }
 
-  * validate(ctx, body) {
-    ctx.assert(body.name, 400, 'name required')
+  * session(ctx) {
+    ctx.body = {
+      message: 'success'
+    }
   }
-
-  * create(ctx, body) {
-    ctx.assert(typeof body === 'object', 400, 'invalid body')
-  }
-
-  * update(ctx, body) {
-    ctx.assert(typeof body === 'object', 400, 'invalid body')
-  }
-
-  * remove() {}
 }
 
 module.exports = Item

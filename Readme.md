@@ -6,7 +6,16 @@
 
 ### koao
 
-* A tiny helper for koa, make rest more easier.
+* A tiny helper for koa, making rest more easier.
+
+### Content
+
+:cry: TODO
+
+### Adaptor
+
+* [mongodb](https://github.com/coderhaoxin/koao-mongo)
+* [knex: postgre, mysql ...](https://github.com/coderhaoxin/koao-knex)
 
 ### License
 MIT

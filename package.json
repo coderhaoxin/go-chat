@@ -1,7 +1,7 @@
 {
   "name": "koao",
-  "version": "0.1.0",
-  "description": "koao - a tiny helper for koa, make rest more easier",
+  "version": "0.2.0",
+  "description": "koao - a tiny helper for koa, making rest more easier",
   "main": "lib/index.js",
   "scripts": {
     "test": "mocha -R spec test/*.js",
@@ -28,6 +28,7 @@
     "supertest": "1"
   },
   "dependencies": {
+    "bcrypt-then": "1",
     "co-body": "3",
     "debug": "2",
     "fs-readdir-recursive": "0",

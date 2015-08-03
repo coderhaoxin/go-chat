@@ -1,5 +1,6 @@
 'use strict'
 
+const MongoUserAdaptor = require('koao-mongo').User
 const MongoAdaptor = require('koao-mongo')
 const request = require('supertest')
 const assert = require('assert')
@@ -8,11 +9,12 @@ const koao = require('..')
 const koa = require('koa')
 const join = path.join
 
-describe('## mongo adaptor', function() {
+describe('## user handler', function() {
   describe('# basic', function() {
-    const prefix = '/api/v1/notes'
+    const prefix = '/api/v1/users'
 
-    let app, id
+    let username = Date.now()
+    let app, uid
 
     it('init', function() {
       return genApp('/api/v1')
@@ -21,14 +23,15 @@ describe('## mongo adaptor', function() {
         })
     })
 
-    it('create', function(done) {
+    it('signup', function(done) {
       request(app.listen())
-        .post(prefix)
+        .post(prefix + '/signup')
         .send({
-          name: 'haoxin'
+          username: username,
+          password: '123456'
         })
         .end(function(err, res) {
-          id = res.body.id
+          uid = res.body.id
           assert.ifError(err)
           assert.equal(res.status, 200)
           assert.equal(res.body.message, 'success')
@@ -36,88 +39,83 @@ describe('## mongo adaptor', function() {
         })
     })
 
-    it('query', function(done) {
+    it('signup - exist', function(done) {
       request(app.listen())
-        .get(prefix)
-        .query({
-          name: 'haoxin'
-        })
-        .end(function(err, res) {
-          assert.ifError(err)
-          assert.equal(res.status, 200)
-          assert(res.body.notes.length > 0)
-          assert.equal(res.body.notes[0].name, 'haoxin')
-          done()
-        })
-    })
-
-    it('findOne', function(done) {
-      request(app.listen())
-        .get(prefix + '/' + id)
-        .end(function(err, res) {
-          assert.ifError(err)
-          assert.equal(res.status, 200)
-          assert.equal(res.body.name, 'haoxin')
-          done()
-        })
-    })
-
-    it('create - name not exist', function(done) {
-      request(app.listen())
-        .post(prefix)
+        .post(prefix + '/signup')
         .send({
-          desc: 'hello'
+          username: username,
+          password: '123456'
         })
         .end(function(err, res) {
           assert(err instanceof Error)
           assert.equal(res.status, 400)
-          assert.deepEqual(res.body, { message: 'name required' })
+          assert.equal(res.text, 'username exist')
+          done()
+        })
+    })
+
+    it('signin', function(done) {
+      request(app.listen())
+        .post(prefix + '/signin')
+        .send({
+          username: username,
+          password: '123456'
+        })
+        .end(function(err, res) {
+          assert.ifError(err)
+          assert.equal(res.status, 200)
+          assert.equal(res.body.message, 'success')
+          done()
+        })
+    })
+
+    it('signin - invalid', function(done) {
+      request(app.listen())
+        .post(prefix + '/signin')
+        .send({
+          username: username,
+          password: '12345'
+        })
+        .end(function(err, res) {
+          assert(err instanceof Error)
+          assert.equal(res.status, 400)
+          assert.equal(res.text, 'invalid username or password')
           done()
         })
     })
 
     it('update', function(done) {
       request(app.listen())
-        .put(prefix + '/' + id)
+        .put(prefix + '/' + uid)
         .send({
-          name: 'hello'
+          desc: 'hello'
         })
         .end(function(err, res) {
           assert.ifError(err)
           assert.equal(res.status, 200)
-          assert.deepEqual(res.body, { message: 'success' })
+          assert.equal(res.body.message, 'success')
           done()
         })
     })
 
-    it('findOne', function(done) {
+    it('session', function(done) {
       request(app.listen())
-        .get(prefix + '/' + id)
+        .get(prefix + '/session')
         .end(function(err, res) {
           assert.ifError(err)
           assert.equal(res.status, 200)
-          assert.deepEqual(res.body.name, 'hello')
+          assert.equal(res.body.message, 'success')
           done()
         })
     })
 
-    it('remove', function(done) {
+    it('logout', function(done) {
       request(app.listen())
-        .del(prefix + '/' + id)
+        .get(prefix + '/logout')
         .end(function(err, res) {
           assert.ifError(err)
           assert.equal(res.status, 200)
-          assert.deepEqual(res.body, { message: 'success' })
-          done()
-        })
-    })
-
-    it('findOne', function(done) {
-      request(app.listen())
-        .get(prefix + '/' + id)
-        .end(function(err, res) {
-          assert(err instanceof Error)
-          assert.equal(res.status, 404)
+          assert.equal(res.body.message, 'success')
           done()
         })
     })
@@ -131,6 +129,13 @@ function genApp(prefix) {
     koao.init(app, {
       prefix: prefix,
       handlerDir: join(__dirname, 'fixture/handler'),
+      userAdaptor: new MongoUserAdaptor({
+        mongoURL: 'mongodb://localhost/test',
+        connected: function() {
+          resolve(app)
+        },
+        onerror: reject
+      }),
       adaptor: new MongoAdaptor({
         mongoURL: 'mongodb://localhost/test',
         connected: function() {

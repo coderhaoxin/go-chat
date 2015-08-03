@@ -7,8 +7,8 @@ const koao = require('..')
 const koa = require('koa')
 const join = path.join
 
-describe('## basic', function() {
-  describe('# handler', function() {
+describe('## koao', function() {
+  describe('# basic', function() {
     const prefix = '/api/v1'
     const app = genApp(prefix)
 
